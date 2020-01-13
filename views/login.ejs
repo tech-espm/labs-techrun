@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<title>
+		<%= title %>
+	</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/vendor/bootstrap/css/bootstrap.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/vendor/animate/animate.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/vendor/css-hamburgers/hamburgers.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/vendor/animsition/css/animsition.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/vendor/select2/select2.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/vendor/daterangepicker/daterangepicker.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/login_style/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/login_style/css/main.css">
+	<!--===============================================================================================-->
+</head>
+<body>
+
+	<div class="limiter">
+		<!-- style="background-image: url('images/bg-01.jpg');" -->
+		<div class="container-login100">
+			<div class="wrap-login100 p-t-30 p-b-50">
+				<span class="login100-form-title p-b-41">
+					Login
+				</span>
+				<form class="login100-form validate-form p-b-33 p-t-5" id="form">
+
+					<div class="wrap-input100">
+						<input class="input100" type="text" id="login" name="login" placeholder="Nome de usuário"maxlength="50" autocomplete="off" />
+					</div>
+
+					<div class="wrap-input100">
+						<input class="input100" type="email" id="email" name="email" placeholder="E-mail" autocomplete="off" />
+					</div>
+
+					<div class="container-login100-form-btn m-t-32">
+						<input type="submit" value="Cadastrar" class="login100-form-btn">
+					</div>
+					<div class="container-login100-form-btn m-t-32">
+						<a href="/" class="login50-form-btn">Voltar</a>
+					</div>
+
+					<div class="container-login100-form-btn m-t-32 text-danger" id="retornoUser"></div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!--===============================================================================================-->
+	<script src="/login_style/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
+	<!--===============================================================================================-->
+	<script src="/login_style/vendor/bootstrap/js/popper.js"></script>
+	<script src="/login_style/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="/login_style/js/main.js"></script>
+	<script src="/js/jquery.validate.min.js"></script>
+	<script src="/js/messages_pt_BR.min.js"></script>
+
+<script type="text/javascript">
+	$("#form").validate({
+		rules: {
+			login: {
+				required: true,
+				minlength: 5,
+				maxlength: 50
+			},
+			email: {
+				required: true,
+				email: true
+			}
+		},
+		submitHandler: function (form) {
+			if ($.active) {
+				return;
+			}
+
+            var login = $('#login').val().toLowerCase();
+
+			$.ajax({
+				type: 'POST',
+				url: '/newUser',
+				data: $(form).serialize(),
+				success: function (resp) {
+					var user_id = parseInt(resp);
+					if (isNaN(user_id)) {
+						document.getElementById('retornoUser').innerHTML = resp;
+					} else {
+						sessionStorage.setItem('username', login);
+						sessionStorage.setItem('user_id', user_id);
+                        window.setInterval(function () {
+                            location.href = '/game'
+                        }, 10);
+					}
+				},
+				error: function (xhr) {
+                    var err;
+                    try {
+                        err = JSON.parse(xhr.responseText);
+                        if (!err || !err.length)
+                            err = null;
+                    } catch (ex) {
+                        err = null;
+                    }
+                    if (!err) {
+                        err = 'Desculpe, algo saiu errado :(<br/>Por favor, tente novamente em alguns instantes!';
+                    }
+                    document.getElementById('retornoUser').innerHTML = err;
+				}
+			});
+		}
+	});
+</script>
+</body>
+
+</html>

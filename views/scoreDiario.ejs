@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8"/>
+		<title>GameLab</title>
+	</head>
+	<body>
+		<div>
+			<table>
+				<tr>
+					<th>Usuario</th>
+					<th>Score</th>
+					<th>Data</th>
+				</tr>
+				<% for(var i=0; i < scores.length; i++){ %>
+				<tr>
+					<td> <%= scores[i].login%> </td>
+					<td> <%= scores[i].score%> </td>
+					<td> <%= scores[i].vezes%> </td>
+				</tr>
+				<% } %>
+			</table>
+		</div>	
+	</body>
+</html>
